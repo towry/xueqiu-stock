@@ -16,7 +16,7 @@
               v-class="
                 left: $index == 0
           ">
-            {{column.displayName}}
+            {{ column.displayName }}
             <span class="arrow"
                   v-class="reversed[column.key] ? 'dsc' : 'asc'">
             </span>
@@ -29,18 +29,18 @@
               entry: data
               | orderBy sortKey reversed[sortKey]">
           <td class="left">
-            {{entry.stockName}}
+            {{ entry.name }}
             <br/>
-            <span class="code">{{entry.code}}</span>
+            <span class="code">{{ entry.code }}</span>
           </td>
           <td>
-            {{entry.current}}
+            {{ entry.currentFormated }}
           </td>
           <td v-class="
                 up: entry.change > 0,
                 down: entry.change < 0
           ">
-            {{entry.change}}({{entry.percentage}}%)
+            {{ entry.change }} ({{ entry.percentage }}%)
           </td>
         </tr>
       </tbody>

@@ -21,11 +21,6 @@ var conf = loadConfig();
 
 menu.on('ready', function ready() {
 
-  menu.app.on('will-quit', function tryQuit(e) {
-    menu.window = undefined;
-    e.preventDefault();
-  });
-
   ipc.on('terminate', function terminate() {
     menu.app.quit();
   });
@@ -37,11 +32,20 @@ menu.on('ready', function ready() {
   var refreshTimer = null;
   menu.on('show', function() {
     console.log('register refresh timer');
-    refreshTimer = setInterval(getStocks, 30000);
+    getStocks(function () {
+      refreshTimer = setInterval(function () {
+        getStocks(function () {
+          refreshTimer = null;
+        });
+      }, 2 * 1e3);
+    })
   });
 
   menu.on('hide', function() {
     console.log('clear refresh timer');
+    if (!refreshTimer) {
+      return;
+    }
     clearInterval(refreshTimer);
   });
 });
@@ -81,8 +85,7 @@ function loadConfig() {
   return conf;
 }
 
-function getStocks() {
-  console.log('reload config');
+function getStocks(callback) {
   conf = loadConfig();
 
   var uid = process.env.UID ? process.env.UID : conf.uid;
@@ -95,11 +98,30 @@ function getStocks() {
     if (!err && res.statusCode === 200) {
       request(stocksURL, function(err, res, body) {
         if (!err && res.statusCode === 200) {
-          var stocks = JSON.parse(body).stocks;
+          var parsedData = JSON.parse(body);
+          var stocks = parsedData.stocks;
+          var stocksQs = '';
+
+          if (conf.portfolio) {
+            // 如果只显示某个自选组合
+            var choosedPortfolio = _.find(parsedData.portfolios, function (o) {
+              return o.name === conf.portfolio;
+            });
+
+            if (choosedPortfolio) {
+              // has one
+              stocksQs = choosedPortfolio.stocks;
+            }
+          }
+
+          if (!stocksQs) {
+            stocksQs = _.pluck(stocks, 'code').join(',');
+          }
+
           request({
             uri: stocksPriceURL,
             qs: {
-              code: _.pluck(stocks, 'code').join(',')
+              code: stocksQs
             }
           }, function(err, res, body) {
             if (err) {
@@ -107,15 +129,23 @@ function getStocks() {
               return;
             }
             var slimStocks = [];
-            _.each(stocks, function(stock, idx) {
-              var s = JSON.parse(body).quotes[idx];
-              stock = _.pick(stock, 'stockName', 'code');
-              stock.current = parseFloat(s.current);
-              stock.percentage = parseFloat(s.percentage);
-              stock.change = parseFloat(s.change);
+            var quotesJson = JSON.parse(body).quotes || [];
+
+            _.each(quotesJson, function(stock) {
+              stock = _.pick(stock, 'name', 'code', 'current', 'percentage', 'change');
+              stock.current = parseFloat(stock.current);
+              stock.currentFormated = parseFloat(Math.round(stock.current * 100) / 100).toFixed(2);
+              stock.percentage = parseFloat(stock.percentage);
+              stock.change = parseFloat(stock.change);
               slimStocks.push(stock);
             });
+
             menu.window.webContents.send('got-all', slimStocks);
+
+            // call callback
+            if (callback) {
+              callback();
+            }
           });
         }
       });

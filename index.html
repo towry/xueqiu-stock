@@ -1,0 +1,68 @@
+<html>
+
+<head>
+  <title>雪球股票</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+  <script type="text/x-template" id="stock-grid-template">
+    <table>
+      <thead>
+        <tr>
+          <th v-repeat="column: columns"
+              v-on="click:sortBy(column.key)"
+              v-class="
+                left: $index == 0
+          ">
+            {{column.displayName}}
+            <span class="arrow"
+                  v-class="reversed[column.key] ? 'dsc' : 'asc'">
+            </span>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr v-repeat="
+              entry: data
+              | orderBy sortKey reversed[sortKey]">
+          <td class="left">
+            {{entry.stockName}}
+            <br/>
+            <span class="code">{{entry.code}}</span>
+          </td>
+          <td>
+            {{entry.current}}
+          </td>
+          <td v-class="
+                up: entry.change > 0,
+                down: entry.change < 0
+          ">
+            {{entry.change}}({{entry.percentage}}%)
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </script>
+
+  <div id="container">
+
+    <stock-grid v-with="
+      data      : gridData,
+      columns   : gridColumns,
+    "></stock-grid>
+
+    <div id="footer">
+      <button v-on="click: onOpenDir" id="open-dir">打开配置文件</button>
+      <button v-on="click: onTerminate" id="quit">退出</button>
+    </div>
+  </div>
+
+  <script>
+    require('./app.js')
+  </script>
+</body>
+
+</html>

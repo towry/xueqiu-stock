@@ -98,7 +98,12 @@ function getStocks(callback) {
     if (!err && res.statusCode === 200) {
       request(stocksURL, function(err, res, body) {
         if (!err && res.statusCode === 200) {
-          var parsedData = JSON.parse(body);
+          var parsedData = null;
+          try {
+            parsedData = JSON.parse(body);
+          } catch (e) {
+            return;
+          }
           var stocks = parsedData.stocks;
           var stocksQs = '';
 
@@ -129,7 +134,13 @@ function getStocks(callback) {
               return;
             }
             var slimStocks = [];
-            var quotesJson = JSON.parse(body).quotes || [];
+            var quotesJson = [];
+
+            try {
+              quotesJson = JSON.parse(body).quotes || [];
+            } catch (e) {
+              quotesJson = [];
+            }
 
             _.each(quotesJson, function(stock) {
               stock = _.pick(stock, 'name', 'code', 'current', 'percentage', 'change');

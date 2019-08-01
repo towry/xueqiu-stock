@@ -19,6 +19,7 @@ Forked from `coolzilj/xueqiu-stock/`, fixed some issues.
 ## Changes
 
 - 2/22/2018, Fix the outdated modules; Fix the quit event.
+- 8/1/2019, Fix the outdated modules; Fix the build.
 
 ## TODO
 

@@ -1,4 +1,4 @@
-require('electron-debug')({showDevTools: true});
+// require('electron-debug')({showDevTools: true});
 
 const pinyin = require('pinyin');
 const electron = require('electron');

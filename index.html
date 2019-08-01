@@ -14,7 +14,7 @@
           <th v-for="(column, index) in columns"
               @click="sortBy(column.key)"
               :class="{left: index == 0}">
-            {{ column.displayName }}
+            <span class='th-title'>{{ column.displayName }}</span>
             <span
               class="arrow"
               :class="reversed[column.key] ? 'dsc' : 'asc'">
@@ -28,18 +28,18 @@
           :key="index + entry.code"
           v-for="(entry, index) in data">
           <td class="left">
-            {{ entry.name }}
+            <span class='tickerName'>{{ entry.name }}</span>
             <br/>
             <span class="code">{{ entry.code }}</span>
           </td>
           <td>
-            {{ entry.currentFormated }}
+            <span class="current">{{ entry.currentFormated }}</span>
           </td>
           <td :class="{
             up: entry.change > 0,
             down: entry.change < 0
           }">
-            {{ entry.change }} ({{ entry.percentage }}%)
+            <span class="change">{{ entry.change }} | {{ entry.percentage }}%</span>
           </td>
         </tr>
       </tbody>

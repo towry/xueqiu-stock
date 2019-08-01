@@ -1,5 +1,6 @@
 require('electron-debug')({showDevTools: true});
 
+const pinyin = require('pinyin');
 const electron = require('electron');
 const { menubar } = require('menubar');
 const _ = require('lodash');
@@ -13,6 +14,7 @@ const menu = menubar({
   dir: __dirname,
   preloadWindow: true,
   icon: path.join(__dirname, 'images', 'Icon.png'),
+  showOnAllWorkspaces: true,
   browserWindow: {
     width: 350,
     height: 370,
@@ -47,7 +49,6 @@ menu.on('ready', function ready() {
   });
 
   menu.on('hide', function() {
-    console.log('clear refresh timer');
     if (!refreshTimer) {
       return;
     }
@@ -56,7 +57,6 @@ menu.on('ready', function ready() {
 });
 
 menu.on('after-create-window', function() {
-  console.log('after create window');
   getStocks();
 });
 
@@ -153,6 +153,7 @@ function getStocks(callback) {
               stock.currentFormated = parseFloat(Math.round(stock.current * 100) / 100).toFixed(2);
               stock.percentage = parseFloat(stock.percentage);
               stock.change = parseFloat(stock.change);
+              stock.name = convertToPinyin(stock.name);
               slimStocks.push(stock);
             });
 
@@ -169,4 +170,17 @@ function getStocks(callback) {
       console.log(err);
     }
   });
+}
+
+
+function convertToPinyin(name) {
+  if (typeof name !== 'string') {
+    return '#' + name;
+  }
+
+  const a = pinyin(name, {
+    style: pinyin.STYLE_NORMAL,
+  });
+
+  return _.flatMap(a).join('').toUpperCase();
 }

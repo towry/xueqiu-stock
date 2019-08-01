@@ -8,6 +8,7 @@
     "electron-packager": "14.0.4",
     "lodash": "4.17.15",
     "menubar": "6.0.7",
+    "pinyin": "^2.9.0",
     "request": "^2.57.0",
     "vue": "2.6.10"
   },

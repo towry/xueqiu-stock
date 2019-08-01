@@ -1,23 +1,28 @@
 require('electron-debug')({showDevTools: true});
 
-var electron = require('electron');
-var menubar = require('menubar');
-var _ = require('lodash');
-var path = require('path');
-var fs = require('fs');
-var request = require('request').defaults({jar: true});
-var ipc = electron.ipcMain;
-var shell = electron.shell;
+const electron = require('electron');
+const { menubar } = require('menubar');
+const _ = require('lodash');
+const path = require('path');
+const fs = require('fs');
+const request = require('request').defaults({jar: true});
+const ipc = electron.ipcMain;
+const shell = electron.shell;
 
-var menu = menubar({
+const menu = menubar({
   dir: __dirname,
   preloadWindow: true,
-  width: 350,
-  height: 370,
-  icon: path.join(__dirname, 'images', 'Icon.png')
+  icon: path.join(__dirname, 'images', 'Icon.png'),
+  browserWindow: {
+    width: 350,
+    height: 370,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  }
 });
 
-var conf = loadConfig();
+let conf = loadConfig();
 
 menu.on('ready', function ready() {
 
@@ -37,7 +42,7 @@ menu.on('ready', function ready() {
         getStocks(function () {
           refreshTimer = null;
         });
-      }, 2 * 1e3);
+      }, 5 * 1e3);
     })
   });
 
@@ -120,7 +125,7 @@ function getStocks(callback) {
           }
 
           if (!stocksQs) {
-            stocksQs = _.pluck(stocks, 'code').join(',');
+            stocksQs = _.map(stocks, 'code').join(',');
           }
 
           request({

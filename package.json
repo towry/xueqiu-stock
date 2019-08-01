@@ -3,18 +3,18 @@
   "version": "1.0.0",
   "description": "check xueqiu stock in menubar",
   "dependencies": {
-    "electron": "^1.8.2",
-    "electron-debug": "^1.5.0",
-    "electron-packager": "^11.0.1",
-    "lodash": "^3.9.3",
-    "menubar": "^5.2.3",
+    "electron": "6.0.0",
+    "electron-debug": "3.0.1",
+    "electron-packager": "14.0.4",
+    "lodash": "4.17.15",
+    "menubar": "6.0.7",
     "request": "^2.57.0",
-    "vue": "^0.11.10"
+    "vue": "2.6.10"
   },
   "devDependencies": {},
   "main": "main.js",
   "scripts": {
-    "build": "electron-packager . 雪球股票助手 --out=build --overwrite --platform=darwin --arch=x64 --version=0.27.2 --ignore=node_modules/electron --icon=images/Icon.icns",
+    "build": "electron-packager . 雪球助手 --out=build --overwrite --platform=darwin --arch=x64 --version=0.27.2 --ignore=node_modules/electron --icon=images/Icon.icns",
     "start": "electron ."
   }
 }

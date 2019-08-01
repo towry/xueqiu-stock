@@ -1,7 +1,7 @@
 <html>
 
 <head>
-  <title>雪球股票</title>
+  <title>雪球</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="stylesheet" href="css/main.css">
 </head>
@@ -11,23 +11,22 @@
     <table>
       <thead>
         <tr>
-          <th v-repeat="column: columns"
-              v-on="click:sortBy(column.key)"
-              v-class="
-                left: $index == 0
-          ">
+          <th v-for="(column, index) in columns"
+              @click="sortBy(column.key)"
+              :class="{left: index == 0}">
             {{ column.displayName }}
-            <span class="arrow"
-                  v-class="reversed[column.key] ? 'dsc' : 'asc'">
+            <span
+              class="arrow"
+              :class="reversed[column.key] ? 'dsc' : 'asc'">
             </span>
           </th>
         </tr>
       </thead>
 
       <tbody>
-        <tr v-repeat="
-              entry: data
-              | orderBy sortKey reversed[sortKey]">
+        <tr
+          :key="index + entry.code"
+          v-for="(entry, index) in data">
           <td class="left">
             {{ entry.name }}
             <br/>
@@ -36,10 +35,10 @@
           <td>
             {{ entry.currentFormated }}
           </td>
-          <td v-class="
-                up: entry.change > 0,
-                down: entry.change < 0
-          ">
+          <td :class="{
+            up: entry.change > 0,
+            down: entry.change < 0
+          }">
             {{ entry.change }} ({{ entry.percentage }}%)
           </td>
         </tr>
@@ -49,19 +48,18 @@
 
   <div id="container">
 
-    <stock-grid v-with="
-      data      : gridData,
-      columns   : gridColumns,
-    "></stock-grid>
+    <stock-grid
+      :columns="gridColumns"
+      :data="gridData"></stock-grid>
 
     <div id="footer">
-      <button v-on="click: onOpenDir" id="open-dir">打开配置文件</button>
-      <button v-on="click: onTerminate" id="quit">退出</button>
+      <button @click="onOpenDir" id="open-dir">打开配置文件</button>
+      <button @click="onTerminate" id="quit">退出</button>
     </div>
   </div>
 
   <script>
-    require('./app.js')
+    require('./app.js');
   </script>
 </body>
 

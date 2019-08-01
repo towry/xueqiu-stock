@@ -1,27 +1,39 @@
 // var _   = require('lodash');
 var electron = require('electron');
 // var fs  = require('fs');
-var Vue = require('vue');
+var Vue = require('vue/dist/vue');
 var ipc = electron.ipcRenderer;
 
 Vue.component('stock-grid', {
   template: '#stock-grid-template',
-  replace: true,
+  // replace: true,
+
   data: function () {
     return {
-      columns: null,
       sortKey: '',
       reversed: {}
     };
   },
-  compiled: function () {
-    var self = this;
-    this.columns.forEach(function (column) {
-      self.reversed.$add(column.key, false);
-    });
+
+  props: {
+    columns: {
+      type: Array,
+      default: (() => []),
+    },
+    data: {
+      type: Array,
+      default: (() => []),
+    }
   },
+
+  created() {
+    this.columns.forEach((column) => {
+      this.reversed[column.key] = false;
+    })
+  },
+
   methods: {
-    sortBy: function (key) {
+    sortBy(key) {
       this.sortKey = key;
       this.reversed[key] = !this.reversed[key];
     }
@@ -34,15 +46,15 @@ var stock = new Vue({
     gridColumns: [
     {
       key: 'code',
-      displayName: '股票'
+      displayName: 'Ticker'
     },
     {
       key: 'current',
-      displayName: '当前价'
+      displayName: 'Current'
     },
     {
       key: 'percentage',
-      displayName: '涨跌幅'
+      displayName: 'Change'
     }],
     gridData: []
   },

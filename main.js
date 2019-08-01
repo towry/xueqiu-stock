@@ -149,10 +149,10 @@ function getStocks(callback) {
 
             _.each(quotesJson, function(stock) {
               stock = _.pick(stock, 'name', 'code', 'current', 'percentage', 'change');
-              stock.current = parseFloat(stock.current);
+              stock.current = parseFloat(stock.current).toFixed(2);
               stock.currentFormated = parseFloat(Math.round(stock.current * 100) / 100).toFixed(2);
-              stock.percentage = parseFloat(stock.percentage);
-              stock.change = parseFloat(stock.change);
+              stock.percentage = parseFloat(stock.percentage).toFixed(2);
+              stock.change = parseFloat(stock.change).toFixed(2);
               stock.name = convertToPinyin(stock.name);
               slimStocks.push(stock);
             });

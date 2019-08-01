@@ -3,19 +3,20 @@
   "version": "1.0.0",
   "description": "check xueqiu stock in menubar",
   "dependencies": {
-    "electron": "6.0.0",
-    "electron-debug": "3.0.1",
-    "electron-packager": "14.0.4",
     "lodash": "4.17.15",
     "menubar": "6.0.7",
     "pinyin": "^2.9.0",
+    "electron-debug": "3.0.1",
     "request": "^2.57.0",
     "vue": "2.6.10"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "electron": "6.0.0",
+    "electron-packager": "14.0.4"
+  },
   "main": "main.js",
   "scripts": {
-    "build": "electron-packager . 雪球助手 --out=build --overwrite --platform=darwin --arch=x64 --version=0.27.2 --ignore=node_modules/electron --icon=images/Icon.icns",
+    "build": "electron-packager . 雪球助手 --out=build --overwrite --platform=darwin --arch=x64 --ignore=node_modules/electron --icon=images/Icon.icns",
     "start": "electron ."
   }
 }

@@ -25,10 +25,14 @@ const menu = menubar({
 });
 
 let conf = loadConfig();
+let app = {
+  quited: false,
+}
 
 menu.on('ready', function ready() {
 
   ipc.on('terminate', function terminate() {
+    app.quited = true;
     menu.app.quit();
   });
 
@@ -41,6 +45,10 @@ menu.on('ready', function ready() {
     console.log('register refresh timer');
     getStocks(function () {
       refreshTimer = setInterval(function () {
+        if (app.quited) {
+          return;
+        }
+
         getStocks(function () {
           refreshTimer = null;
         });
@@ -91,6 +99,10 @@ function loadConfig() {
 }
 
 function getStocks(callback) {
+  if (app.quited) {
+    return;
+  }
+
   conf = loadConfig();
 
   var uid = process.env.UID ? process.env.UID : conf.uid;
@@ -134,6 +146,10 @@ function getStocks(callback) {
               code: stocksQs
             }
           }, function(err, res, body) {
+            if (app.quited) {
+              return;
+            }
+
             if (err) {
               console.log('err', err);
               return;

@@ -28,9 +28,9 @@
           :key="index + entry.code"
           v-for="(entry, index) in data">
           <td class="left">
-            <span class='tickerName'>{{ entry.name }}</span>
+            <span class='tickerName'>{{ entry.pinyin }}</span>
             <br/>
-            <span class="code">{{ entry.code }}</span>
+            <span class="code">{{ entry.code }}</span> - <span class="code">{{ entry.name }}</span>
           </td>
           <td>
             <span class="current">{{ entry.currentFormated }}</span>

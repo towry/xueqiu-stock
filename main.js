@@ -169,7 +169,7 @@ function getStocks(callback) {
               stock.currentFormated = parseFloat(Math.round(stock.current * 100) / 100).toFixed(2);
               stock.percentage = parseFloat(stock.percentage).toFixed(2);
               stock.change = parseFloat(stock.change).toFixed(2);
-              stock.name = convertToPinyin(stock.name);
+              stock.pinyin = convertToPinyin(stock.name);
               slimStocks.push(stock);
             });
 
